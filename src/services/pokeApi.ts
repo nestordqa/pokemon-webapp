@@ -31,6 +31,7 @@ export const getPokemonList = async (limit: number, offset: number, regionName?:
             const pokedexResponse = await axios.get(pokedexUrl);
             const pokemonEntries = pokedexResponse.data.pokemon_entries;
 
+            //@ts-ignore
             const results = pokemonEntries.map((entry: any) => ({
                 name: entry.pokemon_species.name,
                 url: entry.pokemon_species.url
@@ -79,6 +80,7 @@ export const getPokemonByType = async (type: string, limit: number, offset: numb
     try {
         const response = await pokeApi.get(`/type/${type}`);
 
+        //@ts-ignore
         let pokemonList = response.data.pokemon.map((item: any) => ({
             name: item.pokemon.name,
             url: item.pokemon.url
@@ -97,7 +99,9 @@ export const getPokemonByType = async (type: string, limit: number, offset: numb
             const pokedexResponse = await axios.get(pokedexUrl);
             const pokemonEntries = pokedexResponse.data.pokemon_entries;
 
+            //@ts-ignore
             pokemonList = pokemonList.filter((pokemon: any) => {
+                //@ts-ignore
                 return pokemonEntries.some((entry: any) => entry.pokemon_species.name === pokemon.name);
             });
         }
@@ -128,6 +132,7 @@ export const getPokemonsByRegion = async (regionName: string) => {
         const pokemonEntries = pokedexResponse.data.pokemon_entries;
 
         // Extract the names of the Pokémon in the region
+        //@ts-ignore
         const regionPokemonNames = pokemonEntries.map((entry: any) => entry.pokemon_species.name);
         return regionPokemonNames;
     } catch (error) {

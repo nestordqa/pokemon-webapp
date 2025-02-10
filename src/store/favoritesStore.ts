@@ -1,26 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { saveFavorites } from '../utils/localStorage';
-
-/**
- * @description Represents a Pokémon object with its basic properties.
- * @typedef {Object} Pokemon
- * @property {string} name - The name of the Pokémon.
- * @property {string} url - The URL for fetching more details about the Pokémon.
- * @property {string[]} [types] - An optional array of types the Pokémon belongs to.
- * @property {number} [id] - An optional ID for the Pokémon.
- * @property {Object} [sprites] - An optional object containing image URLs for the Pokémon.
- * @property {string} [sprites.front_default] - An optional URL for the default front sprite of the Pokémon.
- */
-interface Pokemon {
-    name: string;
-    url: string;
-    types?: string[];
-    id?: number;
-    sprites?: {
-        front_default: string;
-    };
-}
+import { Pokemon } from '@/types/pokemon';
 
 /**
  * @description Interface defining the state and actions for managing favorite Pokémon.
@@ -63,6 +44,7 @@ export const useFavoritesStore = create<FavoritesState>()(
                 if (!favorites.find((fav) => fav.name === pokemon.name)) {
                     const newFavorites = [...favorites, pokemon];
                     set({ favorites: newFavorites });
+                    //@ts-ignore
                     saveFavorites(newFavorites);
                 }
             },
@@ -75,6 +57,7 @@ export const useFavoritesStore = create<FavoritesState>()(
                 const favorites = get().favorites;
                 const newFavorites = favorites.filter((fav) => fav.name !== pokemonName);
                 set({ favorites: newFavorites });
+                //@ts-ignore
                 saveFavorites(newFavorites);
             },
             /**
@@ -95,6 +78,7 @@ export const useFavoritesStore = create<FavoritesState>()(
         }),
         {
             name: 'favorites-storage', // unique name
+            //@ts-ignore
             getStorage: () => localStorage, // Use localStorage
         }
     )

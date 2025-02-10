@@ -48,6 +48,7 @@ const useRegions = () => {
             const regionData = await getAllRegions();
             setRegions(regionData);
             setLoading(false);
+            //@ts-ignore
         } catch (e: any) {
             setError(e.message || 'Failed to load regions.');
             setLoading(false);

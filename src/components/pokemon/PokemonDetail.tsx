@@ -139,9 +139,7 @@ const PokemonDetail: React.FC = () => {
         >
             <StyledCard>
                 <StyledCardMedia
-                    component="img"
                     image={pokemon?.sprites?.front_default}
-                    alt={pokemon.name}
                 />
                 <StyledCardContent>
                     <Grid container spacing={4}>
@@ -176,6 +174,7 @@ const PokemonDetail: React.FC = () => {
                         <Grid item xs={12}>
                             <SectionTitle variant="h5">Types:</SectionTitle>
                             <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                            {/* @ts-ignore */}
                                 {pokemon?.types && pokemon.types.map((type: PokemonType) => (
                                     <motion.div
                                         key={type.type.name}

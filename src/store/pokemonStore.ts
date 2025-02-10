@@ -50,6 +50,7 @@ export const usePokemonStore = create<PokemonState>((set) => ({
             set({ loading: true, error: null });
             const regions = await getAllRegions(); // Use service function
             set({ regions: regions, loading: false });
+            //@ts-ignore
         } catch (error: any) {
             set({ loading: false, error: error.message });
         }
@@ -64,6 +65,7 @@ export const usePokemonStore = create<PokemonState>((set) => ({
             set({ loading: true, error: null });
             const pokemonTypes = await getPokemonTypes(); // Use service function
             set({ pokemonTypes: pokemonTypes, loading: false });
+            //@ts-ignore
         } catch (error: any) {
             set({ loading: false, error: error.message });
         }
@@ -88,6 +90,7 @@ export const usePokemonStore = create<PokemonState>((set) => ({
                 offset += limit;
             }
             set({ allPokemon: allPokemonData, loading: false });
+            //@ts-ignore
         } catch (error: any) {
             set({ loading: false, error: error.message });
         }

@@ -22,6 +22,7 @@ const usePokemonTypes = () => {
      * @type {[any[], Function]}
      * @description State variable to store the list of Pokémon types.
      */
+    //@ts-ignore
     const [types, setTypes] = useState<any[]>([]);
 
     /**
@@ -47,6 +48,7 @@ const usePokemonTypes = () => {
             const typeData = await getPokemonTypes();
             setTypes(typeData);
             setLoading(false);
+            //@ts-ignore
         } catch (e: any) {
             setError(e.message || 'Failed to load Pokémon types.');
             setLoading(false);

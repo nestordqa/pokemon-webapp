@@ -1,3 +1,8 @@
+export interface PokemonCard {
+    name: string,
+    url: string
+}
+
 /**
  * @description Represents a stat of a Pokémon, including its base value and details about the stat.
  * @typedef {Object} Stat

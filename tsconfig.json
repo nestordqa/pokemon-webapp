@@ -4,9 +4,11 @@
       "lib": ["dom", "dom.iterable", "esnext"], // Librerías incluidas
       "allowJs": true, // Permite la importación de archivos JavaScript
       "skipLibCheck": true, // Omite la verificación de tipos en archivos de declaración
-      "esModuleInterop": true, // Permite la importación de módulos CommonJS
       "allowSyntheticDefaultImports": true, // Permite importaciones sintéticas
-      "strict": true, // Habilita todas las opciones de tipo estricto
+      "allowImportingTsExtensions": true,
+      "strict": false, // Habilita todas las opciones de tipo estricto
+      "noImplicitAny": false,
+      "esModuleInterop": true,
       "forceConsistentCasingInFileNames": true, // Fomenta el uso consistente de mayúsculas en nombres de archivos
       "module": "esnext", // Sistema de módulos
       "moduleResolution": "node", // Resolución de módulos

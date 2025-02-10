@@ -9,7 +9,6 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { motion, useAnimation } from 'framer-motion';
 import ShareIcon from '@mui/icons-material/Share';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 
 /**
@@ -70,6 +69,8 @@ const FavoriteIconButton = styled(IconButton)(({ theme }) => ({
 const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
     const pokemonId = pokemon.url?.split('/').slice(-2, -1)[0] || pokemon.id?.toString() || '0';
     const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+
+    console.log('pokemon  ==>>>', pokemon)
 
     const isFavorite = useFavoritesStore((state) => state.isFavorite(pokemon.name));
     const addFavorite = useFavoritesStore((state) => state.addFavorite);
@@ -138,9 +139,7 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
                 <Tooltip title="Click to view details">
                     <CardActionArea component={Link} to={`/pokemon/${pokemon.name}`}>
                         <StyledCardMedia
-                            component="img"
                             image={imageUrl}
-                            alt={pokemon.name}
                         />
                         <StyledCardContent>
                             <Typography variant="h6" component="div">
@@ -183,9 +182,6 @@ const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
                         <FavoriteIconButton
                             aria-label="add to favorites"
                             onClick={handleFavoriteClick}
-                            component={motion.div} // Usar motion.div para animar el botón
-                            animate={controls} // Controlar la animación
-                            whileTap={{ scale: 0.9 }} // Animación al hacer clic
                         >
                             {isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
                         </FavoriteIconButton>

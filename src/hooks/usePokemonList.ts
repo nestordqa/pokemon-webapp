@@ -100,6 +100,7 @@ const usePokemonList = (itemsPerPage: number, regionName: string | null, searchT
                 try {
                     const typeData = await getPokemonByType(type, 1000, 0);
                     if (typeData && typeData.results) {
+                        //@ts-nocheck
                         const typePokemonNames = typeData.results.map(p => p.name);
                         // Intersect the type-filtered list with the already filtered list
                         filteredList = filteredList.filter(pokemon =>

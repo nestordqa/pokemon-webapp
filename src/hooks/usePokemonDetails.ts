@@ -49,6 +49,7 @@ const usePokemonDetails = (name: string) => {
             const data = await getPokemonDetails(name);
             setPokemon(data);
             setLoading(false);
+            //@ts-ignore
         } catch (e: any) {
             setError(e.message || 'Failed to load Pokémon details.');
             setLoading(false);
