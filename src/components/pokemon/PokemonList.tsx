@@ -18,6 +18,7 @@ import usePokemonList from '../../hooks/usePokemonList';
 interface PokemonListProps {
     regionName?: string;
     searchTerm?: string;
+    type?: string
 }
 
 /**
@@ -30,7 +31,7 @@ interface PokemonListProps {
  * @param {PokemonListProps} props - The props for the PokemonList component.
  * @returns {JSX.Element} - The PokemonList component.
  */
-const PokemonList: React.FC<PokemonListProps> = ({ regionName = '' }) => {
+const PokemonList: React.FC<PokemonListProps> = ({ regionName = '', type = '' }) => {
     /**
      * @description The number of Pokémon to display per page.
      */
@@ -63,7 +64,7 @@ const PokemonList: React.FC<PokemonListProps> = ({ regionName = '' }) => {
     /**
      * @description Fetches the list of Pokémon using a custom hook.
      */
-    const { pokemonList, loading, error, currentPage, totalPages, handlePageChange } = usePokemonList(itemsPerPage, regionName, searchTerm);
+    const { pokemonList, loading, error, currentPage, totalPages, handlePageChange } = usePokemonList(itemsPerPage, regionName, searchTerm, type);
 
     if (loading) {
         return (

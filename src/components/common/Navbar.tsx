@@ -22,6 +22,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import HomeIcon from '@mui/icons-material/Home';
 import useRegions from '../../hooks/useRegions';
+import usePokemonTypes from '../../hooks/usePokemonTypes';
 import NavButton from './NavButton';
 
 /**
@@ -31,6 +32,7 @@ import NavButton from './NavButton';
  */
 interface NavbarProps {
     onSearch: (searchTerm: string) => void;
+    onTypeChange: (type: string) => void;
     onRegionChange: (region: string) => void;
 }
 
@@ -88,7 +90,7 @@ const SearchTextField = styled(TextField)(({ theme }) => ({
 /**
  * @description A styled FormControl component for the region select.
  */
-const RegionSelect = styled(FormControl)(({ theme }) => ({
+const Selecter = styled(FormControl)(({ theme }) => ({
     minWidth: '120px',
     backgroundColor: '#fff',
     borderRadius: '4px',
@@ -107,7 +109,18 @@ const RegionSelect = styled(FormControl)(({ theme }) => ({
  * @param {NavbarProps} props - The props for the Navbar component.
  * @returns {JSX.Element} - The Navbar component.
  */
-const Navbar: React.FC<NavbarProps> = ({ onSearch, onRegionChange }) => {
+const Navbar: React.FC<NavbarProps> = ({ onSearch, onRegionChange, onTypeChange }) => {
+    const [selectedType, setSelectedType] = useState<string>('');
+    const { types: pokemonTypes } = usePokemonTypes();
+
+    const handleTypeChange = (event: SelectChangeEvent<string>) => {
+        const newType = event.target.value;
+        setSelectedType(newType);
+        onTypeChange(newType);
+        console.log('cambiando', newType)
+    };
+
+
     /**
      * @typedef {Object} NavbarState
      * @property {string} searchTerm - The current search term.
@@ -147,8 +160,8 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onRegionChange }) => {
      */
     const handleSearchSubmit = useCallback(() => {
         onSearch(searchTerm);
-        navigate(`/?search=${searchTerm}&region=${selectedRegion}`);
-    }, [searchTerm, selectedRegion, onSearch, navigate]);
+        navigate(`/?search=${searchTerm}&region=${selectedRegion}&type=${selectedType}`);
+    }, [searchTerm, selectedRegion, selectedType, onSearch, navigate]);
 
     /**
      * @description Clears the search input and navigates to the home page.
@@ -157,6 +170,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onRegionChange }) => {
     const handleClearSearch = useCallback(() => {
         setSearchTerm('');
         onSearch('');
+        setSelectedType('');
         navigate('/');
     }, [onSearch, navigate]);
 
@@ -184,7 +198,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onRegionChange }) => {
     }, [setSearchTerm, handleClearSearch]);
 
     return (
-        <StyledAppBar position="static" style={{ justifySelf: 'end' }}>
+        <StyledAppBar position="static">
             <StyledToolbar>
                 <LogoTypography variant="h6" width={'20%'}>
                     My Pokedex
@@ -219,7 +233,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onRegionChange }) => {
                         />
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
-                        <RegionSelect variant="outlined" size="small">
+                        <Selecter variant="outlined" size="small">
                             <InputLabel id="region-select-label">Region</InputLabel>
                             <Select
                                 labelId="region-select-label"
@@ -235,7 +249,26 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onRegionChange }) => {
                                     <MenuItem key={region.name} value={region.name}>{region.name}</MenuItem>
                                 ))}
                             </Select>
-                        </RegionSelect>
+                        </Selecter>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={2}>
+                        <Selecter variant="outlined" size="small">
+                            <InputLabel id="region-select-label">Type</InputLabel>
+                            <Select
+                                labelId="region-select-label"
+                                id="region-select"
+                                value={selectedType}
+                                onChange={handleTypeChange}
+                                label="Type"
+                            >
+                                <MenuItem value="">
+                                    <em>Type</em>
+                                </MenuItem>
+                                {pokemonTypes && pokemonTypes.map((type) => (
+                                    <MenuItem key={type.name} value={type.name}>{type.name}</MenuItem>
+                                ))}
+                            </Select>
+                        </Selecter>
                     </Grid>
                     {isMobile ? ( // Render the Favorite Icon and Home Icon on mobile
                         <Grid item xs={12} sm={6} md={2} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>

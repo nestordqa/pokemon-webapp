@@ -36,6 +36,8 @@ const App: React.FC = () => {
      */
     const [selectedRegion, setSelectedRegion] = useState<string>('');
 
+    const [selectedType, setSelectedType] = useState<string>('');
+
     /**
      * @description Accesses the actions from the Zustand store to fetch regions, Pokémon types, and all Pokémon.
      */
@@ -61,6 +63,10 @@ const App: React.FC = () => {
         setSelectedRegion(region);
     }, []);
 
+    const handleTypeChange = useCallback((type: string) => {
+        setSelectedType(type);
+    }, []);
+
     /**
      * @description useEffect hook to fetch regions, Pokémon types, and all Pokémon when the component mounts.
      */
@@ -76,11 +82,12 @@ const App: React.FC = () => {
             <Navbar
                 onSearch={handleSearch}
                 onRegionChange={handleRegionChange}
+                onTypeChange={handleTypeChange}
             />
             <Container maxWidth="lg" sx={{ mt: 4 }}>
                 {/* Define the routes for the application */}
                 <Routes>
-                    <Route path="/" element={<PokemonList regionName={selectedRegion} searchTerm={globalSearchTerm} />} />
+                    <Route path="/" element={<PokemonList regionName={selectedRegion} searchTerm={globalSearchTerm} type={selectedType}/>} />
                     <Route path="/pokemon/:name" element={<PokemonDetail />} />
                     <Route path="/favorites" element={<Favorites />} />
                 </Routes>
