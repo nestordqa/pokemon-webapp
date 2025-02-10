@@ -20,6 +20,7 @@ import { useFavoritesStore } from '../../store/favoritesStore';
 import { Ability, PokemonType, Stat } from '../../types/pokemon';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { motion, useAnimation } from 'framer-motion';
 
 /**
  * @description A styled Card component with custom styling for the Pokemon detail card.
@@ -78,46 +79,23 @@ const StatPaper = styled(Paper)(({ theme }) => ({
  * @returns {JSX.Element} - The PokemonDetail component.
  */
 const PokemonDetail: React.FC = () => {
-    /**
-     * @typedef {Object} PokemonDetailParams
-     * @property {string} name - The name of the Pokémon to display details for.
-     */
-
-    /**
-     * @type {PokemonDetailParams}
-     * @description Extracts the Pokémon name from the route parameters.
-     */
     const { name } = useParams<{ name: string }>();
-
-    /**
-     * @description Fetches Pokémon details using a custom hook.
-     */
     const { pokemon, loading, error } = usePokemonDetails(name || '');
 
-    /**
-     * @description Accesses functions from the favorites store.
-     */
     const addFavorite = useFavoritesStore((state) => state.addFavorite);
     const removeFavorite = useFavoritesStore((state) => state.removeFavorite);
     const isFavorite = useFavoritesStore((state) => state.isFavorite);
 
-    /**
-     * @description Manages the state of whether the current Pokémon is a favorite.
-     */
     const [isCurrentlyFavorite, setIsCurrentlyFavorite] = useState<boolean>(false);
 
-    /**
-     * @description Updates the isCurrentlyFavorite state when the component mounts or when the favorite status changes.
-     */
+    // Animación del botón de favoritos
+    const controls = useAnimation();
+
     useEffect(() => {
         setIsCurrentlyFavorite(isFavorite(name || ''));
     }, [name, isFavorite]);
 
-    /**
-     * @description Handles the click event for the favorite button.
-     * @function handleFavoriteClick
-     */
-    const handleFavoriteClick = useCallback(() => {
+    const handleFavoriteClick = useCallback(async () => {
         if (isCurrentlyFavorite) {
             removeFavorite(name || '');
         } else {
@@ -125,8 +103,13 @@ const PokemonDetail: React.FC = () => {
                 addFavorite(pokemon);
             }
         }
+
+        // Animación de rebote al hacer clic
+        await controls.start({ scale: 1.2 });
+        controls.start({ scale: 1 });
+
         setIsCurrentlyFavorite(!isCurrentlyFavorite);
-    }, [name, isCurrentlyFavorite, addFavorite, removeFavorite, pokemon]);
+    }, [name, isCurrentlyFavorite, addFavorite, removeFavorite, pokemon, controls]);
 
     if (loading) {
         return (
@@ -149,77 +132,119 @@ const PokemonDetail: React.FC = () => {
     }
 
     return (
-        <StyledCard>
-            <StyledCardMedia
-                component="img"
-                image={pokemon?.sprites?.front_default}
-                alt={pokemon.name}
-            />
-            <StyledCardContent>
-                <Grid container spacing={4}>
-                    <Grid item xs={12}>
-                        <Typography variant="h3" component="div" gutterBottom style={{ textTransform: 'capitalize' }}>
-                            {pokemon.name}
-                        </Typography>
-                        <Button
-                            variant="contained"
-                            color={isCurrentlyFavorite ? 'error' : 'primary'}
-                            onClick={handleFavoriteClick}
-                            style={{ textTransform: 'capitalize' }}
-                            startIcon={isCurrentlyFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-                        >
-                            {isCurrentlyFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
-                        </Button>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Divider />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <SectionTitle variant="h5">Types:</SectionTitle>
-                        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                            {pokemon?.types && pokemon.types.map((type: PokemonType) => (
-                                <Chip key={type.type.name} label={type.type.name} variant="outlined" style={{ textTransform: 'capitalize' }}/>
-                            ))}
-                        </Box>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <SectionTitle variant="h5">Abilities:</SectionTitle>
-                        <Box>
-                            {pokemon?.abilities && pokemon.abilities.map((ability: Ability) => (
-                                <Typography key={ability.ability.name} variant="body1" style={{ textTransform: 'capitalize' }}>
-                                    {ability.ability.name}
-                                </Typography>
-                            ))}
-                        </Box>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <SectionTitle variant="h5">Stats:</SectionTitle>
-                        <Grid container spacing={2}>
-                            {pokemon?.stats && pokemon.stats.map((stat: Stat) => (
-                                <Grid item xs={12} md={6} key={stat.stat.name}>
-                                    <StatPaper style={{ display: 'flex', flexDirection: 'row', columnGap: '0.5em'}}>
-                                        <Typography variant="subtitle1" style={{ textTransform: 'capitalize', fontWeight: 'bolder'}}>
-                                            {stat.stat.name}:
+        <motion.div
+            initial={{ opacity: 0, y: 50 }} // Animación inicial: deslizar desde abajo
+            animate={{ opacity: 1, y: 0 }} // Animación al cargar
+            transition={{ type: 'spring', stiffness: 100, damping: 10 }} // Efecto de rebote
+        >
+            <StyledCard>
+                <StyledCardMedia
+                    component="img"
+                    image={pokemon?.sprites?.front_default}
+                    alt={pokemon.name}
+                />
+                <StyledCardContent>
+                    <Grid container spacing={4}>
+                        <Grid item xs={12}>
+                            <Typography variant="h3" component="div" gutterBottom style={{ textTransform: 'capitalize' }}>
+                                {pokemon.name}
+                            </Typography>
+                            <motion.div
+                                whileHover={{ scale: 1.05 }} // Animación al hover
+                                whileTap={{ scale: 0.95 }} // Animación al hacer clic
+                            >
+                                <Button
+                                    variant="contained"
+                                    color={isCurrentlyFavorite ? 'error' : 'primary'}
+                                    onClick={handleFavoriteClick}
+                                    style={{ textTransform: 'capitalize' }}
+                                    startIcon={
+                                        <motion.div
+                                            animate={controls} // Controlar la animación del ícono
+                                        >
+                                            {isCurrentlyFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                                        </motion.div>
+                                    }
+                                >
+                                    {isCurrentlyFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
+                                </Button>
+                            </motion.div>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Divider />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <SectionTitle variant="h5">Types:</SectionTitle>
+                            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                                {pokemon?.types && pokemon.types.map((type: PokemonType) => (
+                                    <motion.div
+                                        key={type.type.name}
+                                        initial={{ opacity: 0, y: 20 }} // Animación inicial
+                                        animate={{ opacity: 1, y: 0 }} // Animación al cargar
+                                        transition={{ delay: 0.2 }} // Retraso para un efecto escalonado
+                                    >
+                                        <Chip label={type.type.name} variant="outlined" style={{ textTransform: 'capitalize' }} />
+                                    </motion.div>
+                                ))}
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <SectionTitle variant="h5">Abilities:</SectionTitle>
+                            <Box>
+                                {pokemon?.abilities && pokemon.abilities.map((ability: Ability) => (
+                                    <motion.div
+                                        key={ability.ability.name}
+                                        initial={{ opacity: 0, y: 20 }} // Animación inicial
+                                        animate={{ opacity: 1, y: 0 }} // Animación al cargar
+                                        transition={{ delay: 0.3 }} // Retraso para un efecto escalonado
+                                    >
+                                        <Typography variant="body1" style={{ textTransform: 'capitalize' }}>
+                                            {ability.ability.name}
                                         </Typography>
-                                        <Typography variant="subtitle1">
-                                            {stat.base_stat}
-                                        </Typography>
-                                    </StatPaper>
-                                </Grid>
-                            ))}
+                                    </motion.div>
+                                ))}
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <SectionTitle variant="h5">Stats:</SectionTitle>
+                            <Grid container spacing={2}>
+                                {pokemon?.stats && pokemon.stats.map((stat: Stat) => (
+                                    <Grid item xs={12} md={6} key={stat.stat.name}>
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 20 }} // Animación inicial
+                                            animate={{ opacity: 1, y: 0 }} // Animación al cargar
+                                            transition={{ delay: 0.4 }} // Retraso para un efecto escalonado
+                                        >
+                                            <StatPaper style={{ display: 'flex', flexDirection: 'row', columnGap: '0.5em' }}>
+                                                <Typography variant="subtitle1" style={{ textTransform: 'capitalize', fontWeight: 'bolder' }}>
+                                                    {stat.stat.name}:
+                                                </Typography>
+                                                <Typography variant="subtitle1">
+                                                    {stat.base_stat}
+                                                </Typography>
+                                            </StatPaper>
+                                        </motion.div>
+                                    </Grid>
+                                ))}
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Divider />
+                        </Grid>
+                        <Grid item xs={12} sx={{ textAlign: 'center' }}>
+                            <motion.div
+                                whileHover={{ scale: 1.05 }} // Animación al hover
+                                whileTap={{ scale: 0.95 }} // Animación al hacer clic
+                            >
+                                <Button component={Link} to="/" variant="contained" style={{ textTransform: 'capitalize' }}>
+                                    Back to Home
+                                </Button>
+                            </motion.div>
                         </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                        <Divider />
-                    </Grid>
-                    <Grid item xs={12} sx={{ textAlign: 'center' }}>
-                        <Button component={Link} to="/" variant="contained" style={{ textTransform: 'capitalize' }}>
-                            Back to Home
-                        </Button>
-                    </Grid>
-                </Grid>
-            </StyledCardContent>
-        </StyledCard>
+                </StyledCardContent>
+            </StyledCard>
+        </motion.div>
     );
 };
 

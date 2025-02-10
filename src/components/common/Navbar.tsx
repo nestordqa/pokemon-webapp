@@ -24,6 +24,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import useRegions from '../../hooks/useRegions';
 import usePokemonTypes from '../../hooks/usePokemonTypes';
 import NavButton from './NavButton';
+import { motion } from 'framer-motion';
 
 /**
  * @description Interface defining the props for the Navbar component.
@@ -40,8 +41,8 @@ interface NavbarProps {
  * @description A styled AppBar component for consistent styling across the app.
  */
 const StyledAppBar = styled(AppBar)(() => ({
-    backgroundColor: '#303f9f',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+    backgroundColor: '#1a237e', // Cambio de color a un azul más oscuro
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)', // Sombra más pronunciada
     paddingTop: '15px',
 }));
 
@@ -72,7 +73,7 @@ const LogoTypography = styled(Typography)(({ theme }) => ({
 const SearchTextField = styled(TextField)(({ theme }) => ({
     '& .MuiOutlinedInput-root': {
         backgroundColor: '#fff',
-        borderRadius: '4px',
+        borderRadius: '25px', // Bordes más redondeados
         '& fieldset': {
             borderColor: theme.palette.primary.main,
         },
@@ -93,7 +94,7 @@ const SearchTextField = styled(TextField)(({ theme }) => ({
 const Selecter = styled(FormControl)(({ theme }) => ({
     minWidth: '120px',
     backgroundColor: '#fff',
-    borderRadius: '4px',
+    borderRadius: '25px', // Bordes más redondeados
     marginRight: theme.spacing(2),
     width: '100%',
 }));
@@ -117,56 +118,21 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onRegionChange, onTypeChange 
         const newType = event.target.value;
         setSelectedType(newType);
         onTypeChange(newType);
-        console.log('cambiando', newType)
     };
 
-
-    /**
-     * @typedef {Object} NavbarState
-     * @property {string} searchTerm - The current search term.
-     * @property {string} selectedRegion - The currently selected region.
-     */
-
-    /**
-     * @type {[NavbarState, Function]}
-     * @description State variables for the search term and selected region.
-     */
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [selectedRegion, setSelectedRegion] = useState<string>('');
 
-    /**
-     * @description Hook to manage navigation.
-     */
     const navigate = useNavigate();
-
-    /**
-     * @description Hook to fetch the list of available regions.
-     */
     const { regions } = useRegions();
-
-    /**
-     * @description Hook to access the theme for responsive styling.
-     */
     const theme = useTheme();
-
-    /**
-     * @description Hook to determine if the screen is a mobile device.
-     */
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-    /**
-     * @description Handles the submission of the search form.
-     * @function handleSearchSubmit
-     */
     const handleSearchSubmit = useCallback(() => {
         onSearch(searchTerm);
         navigate(`/?search=${searchTerm}&region=${selectedRegion}&type=${selectedType}`);
     }, [searchTerm, selectedRegion, selectedType, onSearch, navigate]);
 
-    /**
-     * @description Clears the search input and navigates to the home page.
-     * @function handleClearSearch
-     */
     const handleClearSearch = useCallback(() => {
         setSearchTerm('');
         onSearch('');
@@ -174,22 +140,12 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onRegionChange, onTypeChange 
         navigate('/');
     }, [onSearch, navigate]);
 
-    /**
-     * @description Handles changes to the region select.
-     * @function handleRegionChange
-     * @param {SelectChangeEvent<string>} event - The change event.
-     */
     const handleRegionChange = (event: SelectChangeEvent<string>) => {
         const newRegion = event.target.value;
         setSelectedRegion(newRegion);
         onRegionChange(newRegion);
     };
 
-    /**
-     * @description Handles changes to the search input.
-     * @function handleSearchChange
-     * @param {React.ChangeEvent<HTMLInputElement>} event - The change event.
-     */
     const handleSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value);
         if (event.target.value.length === 0) {
@@ -200,93 +156,137 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onRegionChange, onTypeChange 
     return (
         <StyledAppBar position="static">
             <StyledToolbar>
-                <LogoTypography variant="h6" width={'20%'}>
-                    My Pokedex
-                </LogoTypography>
+                <motion.div
+                    initial={{ opacity: 0, x: -50 }} // Animación inicial: deslizar desde la izquierda
+                    animate={{ opacity: 1, x: 0 }} // Animación al cargar
+                    transition={{ type: 'spring', stiffness: 100, damping: 10 }} // Efecto de rebote
+                >
+                    <LogoTypography variant="h6" width={'20%'}>
+                        My Pokedex
+                    </LogoTypography>
+                </motion.div>
                 <Grid container alignItems="center" spacing={2}>
                     <Grid item xs={12} sm={6} md={4}>
-                        <SearchTextField
-                            size="small"
-                            placeholder="Search Pokémon..."
-                            variant="outlined"
-                            value={searchTerm}
-                            onChange={handleSearchChange}
-                            onKeyDown={(event) => {
-                                if (event.key === 'Enter') {
-                                    handleSearchSubmit();
-                                }
-                            }}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        {searchTerm && (
-                                            <IconButton onClick={handleClearSearch} aria-label="clear" sx={{ color: '#757575' }}>
-                                                <ClearIcon />
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }} // Animación inicial: deslizar desde arriba
+                            animate={{ opacity: 1, y: 0 }} // Animación al cargar
+                            transition={{ delay: 0.2 }} // Retraso para un efecto escalonado
+                        >
+                            <SearchTextField
+                                size="small"
+                                placeholder="Search Pokémon..."
+                                variant="outlined"
+                                value={searchTerm}
+                                onChange={handleSearchChange}
+                                onKeyDown={(event) => {
+                                    if (event.key === 'Enter') {
+                                        handleSearchSubmit();
+                                    }
+                                }}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            {searchTerm && (
+                                                <IconButton onClick={handleClearSearch} aria-label="clear" sx={{ color: '#757575' }}>
+                                                    <ClearIcon />
+                                                </IconButton>
+                                            )}
+                                            <IconButton onClick={handleSearchSubmit} aria-label="search" sx={{ color: '#757575' }}>
+                                                <SearchIcon />
                                             </IconButton>
-                                        )}
-                                        <IconButton onClick={handleSearchSubmit} aria-label="search" sx={{ color: '#757575' }}>
-                                            <SearchIcon />
-                                        </IconButton>
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </motion.div>
                     </Grid>
                     <Grid item xs={12} sm={6} md={3}>
-                        <Selecter variant="outlined" size="small">
-                            <InputLabel id="region-select-label">Region</InputLabel>
-                            <Select
-                                labelId="region-select-label"
-                                id="region-select"
-                                value={selectedRegion}
-                                onChange={handleRegionChange}
-                                label="Region"
-                            >
-                                <MenuItem value="">
-                                    <em>All Regions</em>
-                                </MenuItem>
-                                {regions && regions.map((region) => (
-                                    <MenuItem key={region.name} value={region.name}>{region.name}</MenuItem>
-                                ))}
-                            </Select>
-                        </Selecter>
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }} // Animación inicial: deslizar desde arriba
+                            animate={{ opacity: 1, y: 0 }} // Animación al cargar
+                            transition={{ delay: 0.3 }} // Retraso para un efecto escalonado
+                        >
+                            <Selecter variant="outlined" size="small">
+                                <InputLabel id="region-select-label">Region</InputLabel>
+                                <Select
+                                    labelId="region-select-label"
+                                    id="region-select"
+                                    value={selectedRegion}
+                                    onChange={handleRegionChange}
+                                    label="Region"
+                                >
+                                    <MenuItem value="">
+                                        <em>All Regions</em>
+                                    </MenuItem>
+                                    {regions && regions.map((region) => (
+                                        <MenuItem key={region.name} value={region.name}>{region.name}</MenuItem>
+                                    ))}
+                                </Select>
+                            </Selecter>
+                        </motion.div>
                     </Grid>
                     <Grid item xs={12} sm={6} md={2}>
-                        <Selecter variant="outlined" size="small">
-                            <InputLabel id="region-select-label">Type</InputLabel>
-                            <Select
-                                labelId="region-select-label"
-                                id="region-select"
-                                value={selectedType}
-                                onChange={handleTypeChange}
-                                label="Type"
-                            >
-                                <MenuItem value="">
-                                    <em>Type</em>
-                                </MenuItem>
-                                {pokemonTypes && pokemonTypes.map((type) => (
-                                    <MenuItem key={type.name} value={type.name}>{type.name}</MenuItem>
-                                ))}
-                            </Select>
-                        </Selecter>
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }} // Animación inicial: deslizar desde arriba
+                            animate={{ opacity: 1, y: 0 }} // Animación al cargar
+                            transition={{ delay: 0.4 }} // Retraso para un efecto escalonado
+                        >
+                            <Selecter variant="outlined" size="small">
+                                <InputLabel id="type-select-label">Type</InputLabel>
+                                <Select
+                                    labelId="type-select-label"
+                                    id="type-select"
+                                    value={selectedType}
+                                    onChange={handleTypeChange}
+                                    label="Type"
+                                >
+                                    <MenuItem value="">
+                                        <em>Type</em>
+                                    </MenuItem>
+                                    {pokemonTypes && pokemonTypes.map((type) => (
+                                        <MenuItem key={type.name} value={type.name}>{type.name}</MenuItem>
+                                    ))}
+                                </Select>
+                            </Selecter>
+                        </motion.div>
                     </Grid>
-                    {isMobile ? ( // Render the Favorite Icon and Home Icon on mobile
+                    {isMobile ? (
                         <Grid item xs={12} sm={6} md={2} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-                            <IconButton color="inherit" component={Link} to="/" aria-label="home">
-                                <HomeIcon />
-                            </IconButton>
-                            <IconButton color="inherit" component={Link} to="/favorites" aria-label="favorites">
-                                <FavoriteIcon />
-                            </IconButton>
+                            <motion.div
+                                whileHover={{ scale: 1.1 }} // Animación al hover
+                                whileTap={{ scale: 0.9 }} // Animación al hacer clic
+                            >
+                                <IconButton color="inherit" component={Link} to="/" aria-label="home">
+                                    <HomeIcon />
+                                </IconButton>
+                            </motion.div>
+                            <motion.div
+                                whileHover={{ scale: 1.1 }} // Animación al hover
+                                whileTap={{ scale: 0.9 }} // Animación al hacer clic
+                            >
+                                <IconButton color="inherit" component={Link} to="/favorites" aria-label="favorites">
+                                    <FavoriteIcon />
+                                </IconButton>
+                            </motion.div>
                         </Grid>
-                    ) : ( // Render the NavButtons on larger screens
+                    ) : (
                         <Grid item xs={12} sm={6} md={5} lg={4} xl={3} sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-                            <NavButton color="inherit" component={Link} to="/">
-                                Home
-                            </NavButton>
-                            <NavButton color="inherit" component={Link} to="/favorites">
-                                Favorites
-                            </NavButton>
+                            <motion.div
+                                whileHover={{ scale: 1.05 }} // Animación al hover
+                                whileTap={{ scale: 0.95 }} // Animación al hacer clic
+                            >
+                                <NavButton color="inherit" component={Link} to="/">
+                                    Home
+                                </NavButton>
+                            </motion.div>
+                            <motion.div
+                                whileHover={{ scale: 1.05 }} // Animación al hover
+                                whileTap={{ scale: 0.95 }} // Animación al hacer clic
+                            >
+                                <NavButton color="inherit" component={Link} to="/favorites">
+                                    Favorites
+                                </NavButton>
+                            </motion.div>
                         </Grid>
                     )}
                 </Grid>

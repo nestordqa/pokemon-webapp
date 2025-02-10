@@ -13,6 +13,7 @@
     "cypress:run": "cypress run"
   },
   "dependencies": {
+    "framer-motion": "^12.4.2",
     "loadash": "^1.0.0",
     "lodash": "^4.17.21",
     "react": "^19.0.0",

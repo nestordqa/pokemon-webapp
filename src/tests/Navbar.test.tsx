@@ -5,12 +5,13 @@ import { MemoryRouter } from 'react-router-dom';
 // Mock de las funciones onSearch y onRegionChange
 const mockOnSearch = jest.fn();
 const mockOnRegionChange = jest.fn();
+const mockOnTypeChange = jest.fn();
 
 describe('Navbar Component', () => {
     beforeEach(() => {
         render(
             <MemoryRouter>
-                <Navbar onSearch={mockOnSearch} onRegionChange={mockOnRegionChange} />
+                <Navbar onSearch={mockOnSearch} onRegionChange={mockOnRegionChange} onTypeChange={mockOnTypeChange}/>
             </MemoryRouter>
         );
     });
