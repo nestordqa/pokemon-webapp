@@ -1,11 +1,40 @@
+
+export interface Stat {
+    base_stat: number;
+    stat: {
+        name: string;
+        url: string;
+    };
+}
+
+export interface PokemonType {
+    slot: number,
+    type: {
+        name: string;
+        url: string;
+    }
+}
+
+export interface Ability {
+    ability: {
+        name: string;
+        url: string;
+    };
+    is_hidden: boolean;
+    slot: number;
+}
 export interface Pokemon {
     name: string;
     url: string;
-    types?: string[];
+    types?: PokemonType[] | string[];
     id?: number;
     sprites?: {
         front_default: string;
     };
+    abilities?: Ability[],
+    stats?: Stat[],
+    base_experience?: number,
+
 }
   
 export interface PokemonDetails {
@@ -19,21 +48,13 @@ export interface PokemonDetails {
             name: string;
         };
     }[];
-    abilities: {
-        ability: {
-            name: string;
-        };
-    }[];
-    stats: {
-        base_stat: number;
-        stat: {
-            name: string;
-        };
-    }[];
+    abilities: Ability[];
+    stats: Stat[];
 }
   
 export interface Region {
     name: string;
     url: string;
 }
+
   

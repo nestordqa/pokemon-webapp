@@ -1,0 +1,9 @@
+* {
+    padding-bottom: 0;
+    margin:0;
+}
+
+body {
+    margin-bottom: 10px;
+    background-color:rgb(218, 218, 218);
+}
