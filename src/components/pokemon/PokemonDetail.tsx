@@ -15,13 +15,15 @@ import {
     Paper,
 } from '@mui/material';
 import { useParams, Link } from 'react-router-dom';
-import usePokemonDetails from '../hooks/usePokemonDetails';
-import { useFavoritesStore } from '../store/favoritesStore';
-import { Ability, PokemonType, Stat } from '../types/pokemon';
+import usePokemonDetails from '../../hooks/usePokemonDetails';
+import { useFavoritesStore } from '../../store/favoritesStore';
+import { Ability, PokemonType, Stat } from '../../types/pokemon';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
-// Styled components for better aesthetics
+/**
+ * @description A styled Card component with custom styling for the Pokemon detail card.
+ */
 const StyledCard = styled(Card)(({ theme }) => ({
     maxWidth: 800,
     margin: 'auto',
@@ -31,21 +33,33 @@ const StyledCard = styled(Card)(({ theme }) => ({
     overflow: 'hidden',
 }));
 
+/**
+ * @description A styled CardMedia component for displaying the Pokémon image.
+ */
 const StyledCardMedia = styled(CardMedia)({
     height: 400,
     objectFit: 'contain',
     backgroundColor: '#b2b2b2',
 });
 
+/**
+ * @description A styled CardContent component for the content of the card.
+ */
 const StyledCardContent = styled(CardContent)(({ theme }) => ({
     padding: theme.spacing(4),
 }));
 
+/**
+ * @description A styled Typography component for section titles.
+ */
 const SectionTitle = styled(Typography)(({ theme }) => ({
     fontWeight: 600,
     marginBottom: theme.spacing(2),
 }));
 
+/**
+ * @description A styled Paper component for displaying stats.
+ */
 const StatPaper = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(2),
     marginBottom: theme.spacing(2),
@@ -53,18 +67,56 @@ const StatPaper = styled(Paper)(({ theme }) => ({
     boxShadow: '0 2px 8px rgba(0,0,0,0.5)',
 }));
 
+/**
+ * @description PokemonDetail Component: Displays detailed information about a selected Pokémon.
+ *
+ * This component fetches and displays detailed information about a specific Pokémon,
+ * including its image, name, types, abilities, and stats. It also provides a button to
+ * add or remove the Pokémon from the user's favorites.
+ *
+ * @component
+ * @returns {JSX.Element} - The PokemonDetail component.
+ */
 const PokemonDetail: React.FC = () => {
+    /**
+     * @typedef {Object} PokemonDetailParams
+     * @property {string} name - The name of the Pokémon to display details for.
+     */
+
+    /**
+     * @type {PokemonDetailParams}
+     * @description Extracts the Pokémon name from the route parameters.
+     */
     const { name } = useParams<{ name: string }>();
+
+    /**
+     * @description Fetches Pokémon details using a custom hook.
+     */
     const { pokemon, loading, error } = usePokemonDetails(name || '');
+
+    /**
+     * @description Accesses functions from the favorites store.
+     */
     const addFavorite = useFavoritesStore((state) => state.addFavorite);
     const removeFavorite = useFavoritesStore((state) => state.removeFavorite);
     const isFavorite = useFavoritesStore((state) => state.isFavorite);
+
+    /**
+     * @description Manages the state of whether the current Pokémon is a favorite.
+     */
     const [isCurrentlyFavorite, setIsCurrentlyFavorite] = useState<boolean>(false);
 
+    /**
+     * @description Updates the isCurrentlyFavorite state when the component mounts or when the favorite status changes.
+     */
     useEffect(() => {
         setIsCurrentlyFavorite(isFavorite(name || ''));
     }, [name, isFavorite]);
 
+    /**
+     * @description Handles the click event for the favorite button.
+     * @function handleFavoriteClick
+     */
     const handleFavoriteClick = useCallback(() => {
         if (isCurrentlyFavorite) {
             removeFavorite(name || '');

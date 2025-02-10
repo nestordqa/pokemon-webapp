@@ -2,10 +2,10 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Container } from '@mui/material';
 import './styles/globals.css';
-import Navbar from './components/Navbar';
-import PokemonList from './components/PokemonList';
-import PokemonDetail from './components/PokemonDetail';
-import Favorites from './components/Favorites';
+import Navbar from './components/common/Navbar';
+import PokemonList from './components/pokemon/PokemonList';
+import PokemonDetail from './components/pokemon/PokemonDetail';
+import Favorites from './components/favorites/Favorites';
 import { usePokemonStore } from './store/pokemonStore';
 
 const App: React.FC = () => {
