@@ -15,7 +15,6 @@ import {
     Grid,
     useMediaQuery,
     useTheme,
-    Button,
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
@@ -23,6 +22,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import HomeIcon from '@mui/icons-material/Home';
 import useRegions from '../../hooks/useRegions';
+import NavButton from './NavButton';
 
 /**
  * @description Interface defining the props for the Navbar component.
@@ -94,17 +94,6 @@ const RegionSelect = styled(FormControl)(({ theme }) => ({
     borderRadius: '4px',
     marginRight: theme.spacing(2),
     width: '100%',
-}));
-
-/**
- * @description A styled Button component for navigation buttons.
- */
-const NavButton = styled(Button)(() => ({
-    color: '#fff',
-    fontWeight: 600,
-    '&:hover': {
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    },
 }));
 
 /**

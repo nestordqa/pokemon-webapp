@@ -1,7 +1,24 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "compilerOptions": {
+      "target": "es5", // Versión de ECMAScript
+      "lib": ["dom", "dom.iterable", "esnext"], // Librerías incluidas
+      "allowJs": true, // Permite la importación de archivos JavaScript
+      "skipLibCheck": true, // Omite la verificación de tipos en archivos de declaración
+      "esModuleInterop": true, // Permite la importación de módulos CommonJS
+      "allowSyntheticDefaultImports": true, // Permite importaciones sintéticas
+      "strict": true, // Habilita todas las opciones de tipo estricto
+      "forceConsistentCasingInFileNames": true, // Fomenta el uso consistente de mayúsculas en nombres de archivos
+      "module": "esnext", // Sistema de módulos
+      "moduleResolution": "node", // Resolución de módulos
+      "resolveJsonModule": true, // Permite la importación de archivos JSON
+      "isolatedModules": true, // Asegura que cada archivo sea un módulo independiente
+      "noEmit": true, // No genera archivos de salida (solo verificación de tipos)
+      "jsx": "react-jsx", // Soporte para JSX
+      "baseUrl": ".", // Ruta base para importaciones
+      "paths": {
+          "@/*": ["src/*"] // Mapeo de rutas para importaciones
+      }
+  },
+  "include": ["src"], // Incluye solo la carpeta src
+  "exclude": ["node_modules", "build"] // Excluye node_modules y la carpeta de build
 }
