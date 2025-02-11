@@ -160,8 +160,9 @@ const Navbar: React.FC<NavbarProps> = ({ onSearch, onRegionChange, onTypeChange 
                     initial={{ opacity: 0, x: -50 }} // Animación inicial: deslizar desde la izquierda
                     animate={{ opacity: 1, x: 0 }} // Animación al cargar
                     transition={{ type: 'spring', stiffness: 100, damping: 10 }} // Efecto de rebote
+                    style={{ width: '20%' }}
                 >
-                    <LogoTypography variant="h6" width={'20%'}>
+                    <LogoTypography variant="h6">
                         My Pokedex
                     </LogoTypography>
                 </motion.div>
